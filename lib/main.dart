@@ -20,12 +20,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        textTheme: ThemeData.dark().textTheme.apply(
-          fontFamily: 'YandexSans',
-        ),
-      ),
-
+      theme: ThemeData.dark(),
       home: Scaffold(
         body: Stack(
           children: [Center(

@@ -19,10 +19,8 @@ class _ProgressBarState extends State<ProgressBar> with SingleTickerProviderStat
   late AnimationController _controller;
   late Animation<double> _animation;
 
-  static const List<String> emoji = ['😮‍💨', '😤', '😌'];
-  static const List<String> commands = ['Inhale', 'Hold breath', 'Exhale'];
+  static const List<String> commands = ['Inhale', 'Hold', 'Exhale'];
 
-  String _emoji = emoji[2];
   String _command = 'Press on button';
 
   @override
@@ -37,16 +35,12 @@ class _ProgressBarState extends State<ProgressBar> with SingleTickerProviderStat
     _controller.addListener(() {
       setState(() {
         if (_controller.value <= 0.25) {
-          _emoji = emoji[0];
           _command = commands[0];
         } else if (_controller.value > 0.25 && _controller.value <= 0.5) {
-          _emoji = emoji[2];
           _command = commands[1];
         } else if (_controller.value > 0.5 && _controller.value <= 0.75) {
-          _emoji = emoji[1];
           _command = commands[2];
         } else {
-          _emoji = emoji[2];
           _command = commands[1];
         }
       });
@@ -58,7 +52,6 @@ class _ProgressBarState extends State<ProgressBar> with SingleTickerProviderStat
           ..stop()
           ..reset();
         setState(() {
-          _emoji = emoji[2];
           _command = 'Press on button';
         });
       } else {
@@ -73,8 +66,14 @@ class _ProgressBarState extends State<ProgressBar> with SingleTickerProviderStat
     super.dispose();
   }
 
+  Size getProgressBarSize(double y){
+    double height = y/3;
+    return Size(height,height);
+  }
+
   @override
   Widget build(BuildContext context) {
+    double y = MediaQuery.of(context).size.height;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -89,26 +88,14 @@ class _ProgressBarState extends State<ProgressBar> with SingleTickerProviderStat
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 40),
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            AnimatedBuilder(
-              animation: _animation,
-              builder: (context, child) {
-                return CustomPaint(
-                  size: Size(300, 300),
-                  painter: ProgressPainter(_animation.value),
-                );
-              },
-            ),
-            // Text(
-            //   _emoji,
-            //   style: TextStyle(
-            //     fontSize: 150,
-            //     color: Colors.white,
-            //   ),
-            // ),
-          ],
+        AnimatedBuilder(
+          animation: _animation,
+          builder: (context, child) {
+            return CustomPaint(
+              size: getProgressBarSize(y),
+              painter: ProgressPainter(_animation.value),
+            );
+          },
         ),
         SizedBox(height: 80),
       ],
